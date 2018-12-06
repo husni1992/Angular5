@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-home',
@@ -23,20 +24,24 @@ import { trigger, style, transition, animate, keyframes, query, stagger } from '
     ])
   ]
 })
+
 export class HomeComponent implements OnInit {
   itemCount: Number;
   btnText: String = 'Add Item';
   inputText: String = '';
   todoList: Array<String> = [];
 
-  constructor() { }
+  constructor(private _data: DataService) { }
 
   ngOnInit() {
+    this._data.goal.subscribe(res => {
+      this.todoList = res;
+    });
     this.itemCount = this.todoList.length;
   }
 
   onkeyPress(event) {
-    if (event.charCode === 13) {
+    if (event.charCode === 13 && this.inputText) {
       this.addItem();
     }
   }
@@ -44,6 +49,7 @@ export class HomeComponent implements OnInit {
   addItem() {
     if (this.inputText) {
       this.todoList.push(this.inputText);
+      this._data.changeGoal(this.todoList);
       this.itemCount = this.todoList.length;
       this.inputText = '';
     }
@@ -52,6 +58,7 @@ export class HomeComponent implements OnInit {
 
   removeItem(index) {
     this.todoList.splice(index, 1)
+    this._data.changeGoal(this.todoList);
   }
 
 }
