@@ -6,16 +6,19 @@ import { trigger, style, transition, animate, keyframes, query, stagger } from '
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   animations: [
-    trigger('goalsAnimater', [
-      transition('* => *', [
-        query(':enter', style({ opacity: 0 }), { optional: true }),
-        query('enter', stagger('300ms', [
-          animate('.6s ease-in', keyframes([
-            style({ opacity: 0, transform: 'translateY(-75%)', offset: 0 }),
-            style({ opacity: .5, transform: 'translateY(35px)', offset: .3 }),
-            style({ opacity: 1, transform: 'translateY(0)', offset: 1 })
-          ]))
-        ]), { optional: true })
+    trigger('items', [
+      transition(':enter', [
+        style({ transform: 'scale(0.5)', opacity: 0 }),  // initial
+        animate('.3s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+          style({ transform: 'scale(1)', opacity: 1 }))  // final
+      ]),
+      transition(':leave', [
+        style({ transform: 'scale(1)', opacity: 1, height: '*' }),
+        animate('1s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+          style({
+            transform: 'scale(0.5)', opacity: 0,
+            height: '0px', margin: '0px'
+          }))
       ])
     ])
   ]
